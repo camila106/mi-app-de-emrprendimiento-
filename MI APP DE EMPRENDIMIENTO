@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MTC ♻️</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;700&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+
+  <!-- Librerías externas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <img src="logo.png" alt="Logo MTC" class="logo">
+    <h1>♻️ MTC</h1>
+    <h2>Mantenimiento, Tecnología y Computadoras 💻⚡</h2>
+    <p>Transformando residuos electrónicos en un futuro más verde 🌍</p>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <!-- FORMULARIO -->
+    <section class="formulario">
+      <h2>📝 Registro de dispositivo</h2>
+
+      <label for="tipo">📦 Tipo de dispositivo</label>
+      <select id="tipo">
+        <option value="laptop">Laptop 💻</option>
+        <option value="desktop">PC de Escritorio 🖥️</option>
+        <option value="celular">Celular 📱</option>
+        <option value="tablet">Tablet 📲</option>
+      </select>
+
+      <label for="peso">⚖️ Peso (kg, opcional)</label>
+      <input type="number" id="peso" placeholder="Ejemplo: 1.5">
+
+      <label for="estado">⚙️ Estado</label>
+      <select id="estado">
+        <option value="funciona">Funciona ✅</option>
+        <option value="reparacion">Necesita reparación 🛠️</option>
+        <option value="irreparable">Irreparable ❌</option>
+      </select>
+
+      <label for="bateria">🔋 ¿Incluye batería?</label>
+      <select id="bateria">
+        <option value="no">No ❎</option>
+        <option value="si">Sí ✅</option>
+      </select>
+
+      <button id="calcularBtn">🚀 Calcular impacto</button>
+      <div id="resultado" class="resultado"></div>
+    </section>
+
+    <!-- LISTA DE DISPOSITIVOS -->
+    <section class="registro">
+      <h2>📋 Dispositivos registrados</h2>
+      <ul id="lista"></ul>
+      <canvas id="qrCanvas" style="display:none;"></canvas>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section class="dashboard">
+      <h2>📊 Dashboard de Impacto</h2>
+      <div class="graficas">
+        <canvas id="graficaCO2"></canvas>
+        <canvas id="graficaDispositivos"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    🌱 Proyecto escolar – MTC © 2025
+  </footer>
+
+  <!-- SCRIPT -->
+  <script src="script.js"></script>
+</body>
+</html>
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  background: linear-gradient(135deg, #1de9b6, #00c853);
+  color: #222;
+  animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-6px); }
+  60% { transform: translateY(-3px); }
+}
+
+header {
+  text-align: center;
+  background: #004d40;
+  color: white;
+  padding: 1.2rem;
+  animation: fadeIn 1.2s ease-in;
+}
+
+header .logo {
+  width: 120px;
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+  border: 3px solid #ffeb3b;
+  background: white;
+}
+
+header h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  margin: 0.2rem 0;
+  color: #ffeb3b;
+  letter-spacing: 2px;
+}
+
+header h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  margin: 0.3rem 0 1rem 0;
+  color: #ff9800;
+}
+
+main {
+  padding: 2rem;
+}
+
+.formulario {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  max-width: 400px;
+  margin: auto;
+  animation: fadeIn 1.5s ease-in;
+}
+
+label {
+  display: block;
+  margin: 0.8rem 0;
+  font-weight: bold;
+}
+
+input, select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  border-radius: 6px;
+  border: 2px solid #00c853;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+  border-color: #ff9800;
+  box-shadow: 0 0 8px #ff9800;
+  transform: scale(1.02);
+}
+
+button {
+  background: #ff5722;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 1.2rem;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: #e64a19;
+  animation: bounce 0.6s;
+}
+
+.resultado {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 1.1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease;
+}
+
+.resultado.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.registro {
+  margin-top: 2rem;
+  background: #fff3e0;
+  padding: 1rem;
+  border-radius: 12px;
+  animation: fadeIn 2s ease-in;
+}
+
+.registro h2 {
+  font-family: 'Montserrat', sans-serif;
+  color: #d84315;
+}
+
+.dashboard {
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  max-width: 900px;
+  animation: fadeIn 2.2s ease-in;
+}
+
+.dashboard h2 {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  color: #2e7d32;
+  margin-bottom: 1rem;
+}
+
+.graficas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+canvas {
+  max-width: 320px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.8rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+footer {
+  text-align: center;
+  background: #004d40;
+  color: white;
+  padding: 1rem;
+  font-size: 0.9rem;
+}const materialesPorTipo = {
+  laptop: { pesoBase: 2, metal_frac: 0.25, plast_frac: 0.45, vidrio_frac: 0.05 },
+  desktop: { pesoBase: 7, metal_frac: 0.35, plast_frac: 0.35, vidrio_frac: 0.05 },
+  celular: { pesoBase: 0.18, metal_frac: 0.20, plast_frac: 0.30, vidrio_frac: 0.30 },
+  tablet: { pesoBase: 0.5, metal_frac: 0.20, plast_frac: 0.40, vidrio_frac: 0.20 }
+};
+
+let dispositivos = [];
+let graficaCO2, graficaDispositivos;
+
+// ================== CALCULAR IMPACTO ==================
+function calcularImpacto() {
+  const tipo = document.getElementById("tipo").value;
+  const estado = document.getElementById("estado").value;
+  let peso = parseFloat(document.getElementById("peso").value);
+  const bateria = document.getElementById("bateria").value === "si";
+
+  if (isNaN(peso) || peso <= 0) peso = materialesPorTipo[tipo].pesoBase;
+
+  const fracs = materialesPorTipo[tipo];
+  const metal = peso * fracs.metal_frac;
+  const plastico = peso * fracs.plast_frac;
+  const vidrio = peso * fracs.vidrio_frac;
+  const ahorroCO2 = (metal + plastico + vidrio) * 2;
+
+  const recomendacion =
+    estado === "funciona" ? "✅ Donación o reutilización" :
+    estado === "reparacion" ? "🛠️ Reparación recomendada" :
+    "♻️ Desmontaje para repuestos y reciclaje";
+
+  const resultado = document.getElementById("resultado");
+  resultado.innerHTML = `
+    <h3>📊 Impacto estimado</h3>
+    <p><strong>Peso:</strong> ${peso.toFixed(2)} kg</p>
+    <p><strong>Ahorro CO₂:</strong> ${ahorroCO2.toFixed(2)} kg</p>
+    <p><em>${recomendacion}</em></p>
+    <button id="registrarBtn">📋 Registrar dispositivo</button>
+  `;
+  resultado.classList.add("show");
+
+  document.getElementById("registrarBtn").addEventListener("click", () => {
+    const id = Date.now();
+    dispositivos.push({ id, tipo, estado, peso, bateria, co2Ahorrado: ahorroCO2 });
+    actualizarLista();
+    alert("✅ Dispositivo registrado correctamente");
+  });
+}
+
+// ================== LISTA ==================
+function actualizarLista() {
+  const lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  dispositivos.forEach((d, index) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      ${index + 1}. ${d.tipo.toUpperCase()} — 
+      ${d.peso.toFixed(2)} kg — 
+      CO₂: ${d.co2Ahorrado.toFixed(2)} kg 
+      <button onclick="generarPDF(${d.id})">📄 PDF</button>
+    `;
+    lista.appendChild(li);
+  });
+
+  actualizarDashboard();
+}
+
+// ================== PDF + QR ==================
+function generarPDF(id) {
+  const d = dispositivos.find(x => x.id === id);
+  if (!d) return;
+
+  const datosQR = `MTC ♻️
+Tipo: ${d.tipo}
+Peso: ${d.peso.toFixed(2)} kg
+Estado: ${d.estado}
+CO₂ Ahorrado: ${d.co2Ahorrado.toFixed(2)} kg`;
+
+  const qr = new QRious({
+    element: document.getElementById("qrCanvas"),
+    value: datosQR,
+    size: 150
+  });
+
+  const imgData = document.getElementById("qrCanvas").toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+
+  // Marco
+  pdf.setDrawColor(0, 200, 83);
+  pdf.setLineWidth(2);
+  pdf.rect(5, 5, 200, 287);
+
+  // Logo / título
+  pdf.setFontSize(22);
+  pdf.setTextColor(0, 150, 136);
+  pdf.text("♻️ MTC", 105, 20, { align: "center" });
+
+  pdf.setFontSize(14);
+  pdf.setTextColor(0, 0, 0);
+  pdf.text("Etiqueta de Reciclaje Electrónico", 105, 30, { align: "center" });
+
+  // Datos
+  pdf.setFontSize(12);
+  pdf.text(`📦 Tipo: ${d.tipo}`, 20, 50);
+  pdf.text(`⚖️ Peso: ${d.peso.toFixed(2)} kg`, 20, 60);
+  pdf.text(`⚙️ Estado: ${d.estado}`, 20, 70);
+  pdf.text(`🌍 Ahorro CO₂: ${d.co2Ahorrado.toFixed(2)} kg`, 20, 80);
+  pdf.text(d.bateria ? "🔋 Incluye batería (manejo especial)" : "🚫 Sin batería", 20, 90);
+
+  // QR
+  pdf.addImage(imgData, "PNG", 130, 50, 60, 60);
+
+  // Footer
+  pdf.setFontSize(10);
+  pdf.setTextColor(100);
+  pdf.text("🌱 Proyecto escolar – MTC", 105, 280, { align: "center" });
+
+  pdf.save(`Etiqueta_${d.tipo}_${id}.pdf`);
+}
+
+// ================== DASHBOARD ==================
+function actualizarDashboard() {
+  const co2PorTipo = {};
+  const conteoTipos = {};
+
+  dispositivos.forEach(d => {
+    co2PorTipo[d.tipo] = (co2PorTipo[d.tipo] || 0) + d.co2Ahorrado;
+    conteoTipos[d.tipo] = (conteoTipos[d.tipo] || 0) + 1;
+  });
+
+  const etiquetas = Object.keys(co2PorTipo);
+  const datosCO2 = Object.values(co2PorTipo);
+  const datosConteo = Object.values(conteoTipos);
+
+  // CO₂
+  if (graficaCO2) graficaCO2.destroy();
+  graficaCO2 = new Chart(document.getElementById("graficaCO2"), {
+    type: "bar",
+    data: {
+      labels: etiquetas,
+      datasets: [{
+        label: "CO₂ ahorrado (kg)",
+        data: datosCO2,
+        backgroundColor: ["#4CAF50", "#2196F3", "#FFC107", "#E91E63"]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: "🌍 CO₂ evitado por tipo de dispositivo" }
+      }
+    }
+  });
+
+  // Dispositivos
+  if (graficaDispositivos) graficaDispositivos.destroy();
+  graficaDispositivos = new Chart(document.getElementById("graficaDispositivos"), {
+    type: "pie",
+    data: {
+      labels: Object.keys(conteoTipos),
+      datasets: [{
+        label: "Cantidad de dispositivos",
+        data: datosConteo,
+        backgroundColor: ["#8BC34A", "#03A9F4", "#FF9800", "#9C27B0"]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: "📦 Distribución de dispositivos" }
+      }
+    }
+  });
+}
+
+// ================== EVENTOS ==================
+document.getElementById("calcularBtn").addEventListener("click", calcularImpacto);
